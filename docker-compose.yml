@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: postgres:14.4
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'pass'
+      POSTGRES_DB: 'some-db'
+    ports:
+      - 5432:5432
+  
+  app:
+    build: .
+    container_name: app
+    image: app
+    environment:
+      POSTGRES_HOST: 'postgres'
+      POSTGRES_DATABASE: 'some-db'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'pass'
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+
+volumes:
+  pg-data:
